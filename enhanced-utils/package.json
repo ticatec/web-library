@@ -1,0 +1,14 @@
+{
+  "name": "@ticatec/enchance-utils",
+  "version": "0.0.2",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "tsc && cp ./package.json ./dist/",
+    "publish:public": "cd ./dist && npm publish --access public"
+  },
+  "dependencies": {
+  }
+}
