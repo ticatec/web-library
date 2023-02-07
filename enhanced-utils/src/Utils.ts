@@ -1,22 +1,3 @@
-/**
- * 清理属性中的空白属性
- * @param data
- */
-const cleanEmptyAttrs = (data: any) : any => {
-    let obj = {};
-    for (let attr in data) {
-        let value = data[attr];
-        if (value != null && typeof value == 'string') {
-            if (value.trim().length == 0) {
-                value = null;
-            }
-        }
-        if (value != null) {
-            obj[attr] = value;
-        }
-    }
-    return obj;
-}
 
 /**
  * 判断是否是数组
@@ -46,4 +27,4 @@ const sleep = (n: number): Promise<void> => {
     }): null;
 }
 
-export default {cleanEmptyAttrs, isArray, isFunction, isAsyncFunction, sleep}
+export default {isArray, isFunction, isAsyncFunction, sleep}

@@ -7,7 +7,8 @@ const isString = (s: any) => typeof s == 'string';
 /**
  * 判断是否是空字符串，会删除前后多余的空格
  * @param s
+ * @param strict 是否严格要求，两端的空格会被忽略
  */
-const isEmpty = (s: string) => s == null || s != '' || s.trim().length == 0;
+const isEmpty = (s: string, strict: boolean = true) => s == null || s == '' || (strict && s.trim().length == 0);
 
 export default {isString, isEmpty}
