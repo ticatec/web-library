@@ -48,7 +48,7 @@ export default class Validator {
                     valid = false;
                 }
             } else {
-                console.log('检查属性', this.field, value);
+                console.debug('检查属性', this.field, value);
                 valid = this.checkValue(value, result);
                 if (valid && this.custom != null) {
                     valid = this.custom(data, result);

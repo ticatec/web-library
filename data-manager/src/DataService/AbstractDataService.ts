@@ -1,15 +1,6 @@
+import BaseDataService from "./BaseDataService";
 
-export default abstract class AbstractDataService {
-
-    private static serverProxy;
-
-    static setProxy(value: any) {
-        AbstractDataService.serverProxy = value;
-    }
-
-    protected getService():any {
-        return AbstractDataService.serverProxy;
-    }
+export default abstract class AbstractDataService extends BaseDataService {
 
     /**
      * 保存数据

@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"esModuleInterop": true,
-		"target": "es6",
+		"target": "es2015",
 		"resolveJsonModule": true,
 		"moduleResolution": "node",
 		"declaration": true,

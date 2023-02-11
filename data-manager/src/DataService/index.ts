@@ -1,4 +1,5 @@
 import AbstractDataService from "./AbstractDataService";
 import AbstractPaginationDataService from "./AbstractPaginationDataService";
+import BaseDataService from "./BaseDataService";
 
-export {AbstractDataService, AbstractPaginationDataService};
+export {BaseDataService, AbstractDataService, AbstractPaginationDataService};

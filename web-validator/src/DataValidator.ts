@@ -32,13 +32,13 @@ const createValidationRule = (rule):Validator => {
         case 'float':
             return new FloatValidator(rule.field, rule.name, rule.key, rule.required, rule.min, rule.max, rule.custom);
         case 'object':
-            return new ObjectValidator(rule.field, rule.name, rule.key, rule.required, createValidators(rule.rules), rule.custome);
+            return new ObjectValidator(rule.field, rule.name, rule.key, rule.required, createValidators(rule.rules), rule.custom);
         default:
             return new StringValidator(rule.field, rule.name, rule.key,rule.required, rule.minLen, rule.regex, rule.custom,);
     }
 }
 
-const createValidators = (rules): Array<Validator> => {
+const createValidators = (rules: Array<Validator>): Array<Validator> => {
     let arr: Array<Validator> = [];
     rules.forEach(rule => {
         arr.push(createValidationRule(rule));
@@ -46,6 +46,6 @@ const createValidators = (rules): Array<Validator> => {
     return arr;
 }
 
-export const createDataValidator = (rules):DataValidator =>  {
+export const createDataValidator = (rules: Array<Validator>):DataValidator =>  {
     return new DataValidator(createValidators(rules));
 }

@@ -69,7 +69,7 @@ export default class RestService {
                 if (text.length > 0) {
                     let headers = response.headers;
                     let resType = headers.get(CONTENT_TYPE_NAME);
-                    let data = resType.includes('application/json') ? JSON.parse(text) : text;
+                    let data = resType.includes(TYPE_JSON) ? JSON.parse(text) : text;
                     if (this.postInvoke) {
                         data = await this.postInvoke(data);
                     }

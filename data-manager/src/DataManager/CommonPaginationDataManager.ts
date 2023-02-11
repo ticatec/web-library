@@ -70,6 +70,14 @@ export default abstract class CommonPaginationDataManager<T extends AbstractPagi
     }
 
     /**
+     * 按照条件重新查询
+     * @param criteria
+     */
+    async search(criteria:any): Promise<void> {
+        await this.searchData(criteria);
+    }
+
+    /**
      * 刷新查询数据
      */
     async refresh(): Promise<void> {

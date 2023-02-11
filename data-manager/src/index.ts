@@ -1,9 +1,9 @@
-import '@ticatec/enchance-utils';
+import '@ticatec/enhanced-utils';
 import {BaseDataManager, PaginationDataManager, StackDataManager} from "./DataManager";
-import {AbstractDataService, AbstractPaginationDataService} from "./DataService";
+import {BaseDataService, AbstractDataService, AbstractPaginationDataService} from "./DataService";
 import PaginationList from "./PaginationList";
 
 
 export {BaseDataManager, PaginationDataManager, StackDataManager}
-export {AbstractDataService, AbstractPaginationDataService}
+export {BaseDataService, AbstractDataService, AbstractPaginationDataService}
 export {PaginationList}

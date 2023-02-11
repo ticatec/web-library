@@ -1,0 +1,23 @@
+{
+  "name": "@ticatec/node-express-validator",
+  "version": "1.0.0",
+  "description": "a validator library for node js",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf ./lib",
+    "build": "tsc && cp ./package.json ./lib/ && cp *.md ./lib/",
+    "publish:public": "cd ./lib && npm publish --access public"
+  },
+  "keywords": [
+    "node",
+    "validator"
+  ],
+  "author": "Henry Feng",
+  "license": "MIT",
+  "dependencies": {
+    "@types/sprintf-js": "^1.1.2",
+    "dayjs": "^1.11.6",
+    "sprintf-js": "^1.1.2",
+    "@ticatec/express-exception": "^1.0.0"
+  }
+}
