@@ -12,6 +12,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ticatec/enchance-utils": "^0.0.2"
+    "@ticatec/enhanced-utils": "^1.0.1"
   }
 }

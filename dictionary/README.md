@@ -1,112 +1,169 @@
-# 公共数据字典管理
+# Dictionary Manager Library
 
-在前台的开发中，我们经常需要中使用数据字典用于选择，key-value转换工作。通过这个管理类库可以简单的实现。里面总共包括了三个组件
+## Dictionary Manager
+This package contains a Dictionary Manager, which is responsible for managing a collection of data dictionaries. The manager allows for the registration, initialization, and refresh of data dictionaries.
 
-## 数据字典的类型
+### Installation
+You can install the package using npm:
 
-### 单层字典 Dictionary
-单层字典建立一组key-value映射组。  
-* 构造函数：
-new Dictionary(loader, keyName, getText, missingText);    
+```shell
+npm install @ticatec/dictionary
+```
+### Usage
+To use the Dictionary Manager, you will first need to import the instance of the DicManager class which is a singleton class:
 
-其中loader是一个加载数据的函数，返回一个数组，keyName是字典的中key关键字的字段名，getText可以简单的是一个表示值的字段名，
-也可以是一个函数，用于对应项目的显示值，missingText是没有对应数据项的时候返回的表达值。
-使用方法如下：
-```
-  import Dictionary from 'ticatec-ts-dictionary';
-  
-  const deviceTypeLoader = async()=>await deviceService.getList();
-  /**
-   * 构造一个设备类型的数据字典，其中的关键字的字段为code，表达值的字段为text
-   */
-  const dicDeviceType = new Dictionary(deviceTypeLoader, 'code', 'text', '不存在的设备类型');
-  
-  
-  const faultTypeLoader = async()=>await faultService.getList();
-  const getFaultDesc = item => `${code}-${name}`;
-  /**
-   * 构造一个故障类型的数据字典，其中的关键字的字段为id，表达值的根据函数计算，返回code和name组合的字符串
-   */
-  const  dicFaultTypeDic = new Dictionary(deviceTypeLoader, 'id', getFaultDesc, '错误的故障类型编码');
-  
-```
-数据字典类也支持加载本地静态数据，比如json格式的数据，示例代码如下：
-JSON数据：gender.json
-```
-  [
-    {"code":"M", "text":"男"}, 
-    {"code":"F", "text":"女"}, 
-    {"code":"N", "text":"未知"}
-  ]
-```
-ts示例代码:
-```
-    import genders from './data/gender.json';
-    
-    const dicGender = new Dictionary(()=>genders, 'code', 'text', '错误的性别编码');
+```typescript
+import dicManager from '@ticatec/dictionary';
 ```
 
-* 属性
-1. **list** 数据字典中数据项列表
-2. **initialized** 数据字典是否初始化完毕
 
-* 方法
-1. **reload()** - 异步方法，加载数据
-2. **get(key)** - 根据key值返回对应的数据项
-3. **getValue(key)** - 根据key值返回对应的表达值，如果不存在，返回预定义的missingText
+**Registering a Dictionary**  
+You can register a new dictionary with the manager using the register method. This method takes two arguments: a key to identify the dictionary, and an instance of the Dictionary class:
 
-### 层次型数据字典 TreeDictionary
-层次型数据字典是一个树状的多层数据字典，用于记录多级机构，比如省-市-区县的字典类。层次型数据字典集成自普通的数据字典
+```typescript
+import {Dictionary} from '@ticatec/dictionary';
 
-**特殊要求：** loader返回的数据项中包含子数据项的，属性名称必须是**children**
-* 构造函数：
-  new TreeDictionary(loader, keyName, getText, missingText, isLeaf);
-前面的四个参数同普通的数据字典构造参数，最后一个是一个函数，判断数据项是否是一个叶节点。示例代码：  
-```
-const isLeaf = item => item.children == null;
-```
-* 属性
-1. **leafs** 所有的叶节点
-
-* 方法
-1. **getChildren(key)** 获取指定节点的所有子数据项
-
-通常来说，程序员没有必要自己初始化数据字典，可以通过数字字典管理器来管理所有的数据字典
-
-## 数据字典管理器单一实例 dicManager
-
-这是一个数据字典管理类的实例。项目中需要的所有数据字典都可以让这个来管理。使用方法如下：
-
-```
-  import dicManager from 'ticatec-ts-dictonary';
+const myDictionary = new Dictionary(/* ... */);
+myDicManager.register('myDictionary', myDictionary);
 ```
 
-dicManager包括以下方法：
+**Initializing Dictionaries**  
+To initialize a group of dictionaries, you can use the initialize method. This method takes an array of keys that correspond to the dictionaries you want to initialize:
 
-* 注册一个普通数据字典，register
-* 获取一个数据字典，get
-* 初始化加载指定的数据字典 initialize
-* 初始化加载指定的数据字典 refresh
-
-### register
-
-```
-    /**
-     * 注册一个普通的数据字典
-     * @param key 数据字典的名称
-     * @param dic 数据字典
-     */
-    dicManager.register('gender', dicGender);
+```typescript
+await myDicManager.initialize(['myDictionary']);
 ```
 
-### get
+**Refreshing a Dictionary**  
+To refresh a single dictionary, you can use the refresh method. This method takes a single argument: the key of the dictionary to refresh:
 
-返回对应的数据字典
-```
-    let dic = await dicManager.get('country');
+```typescript
+await myDicManager.refresh('myDictionary');
 ```
 
-### initialize
+**Getting a Dictionary**  
+To retrieve a dictionary, you can use the get method. This method takes a single argument: the key of the dictionary to retrieve:
+
+```typescript
+const myDictionary = await myDicManager.get('myDictionary');
 ```
-    await dicManager.initialize(['country', 'gender', 'org', 'dept']); 
+
+## Dictionary Class
+This class represents a dictionary that can be used to store and retrieve a collection of objects based on their unique keys. It provides methods to load the dictionary with data, access the data stored in the dictionary, and manipulate the data as needed.
+
+
+### Usage
+To use this class, you will need to import it as follows:
+
+```typescript
+import {Dictionary, DataLoader, GetText} from "@ticatec/Dictionary";
 ```
+
+**Creating a new dictionary**  
+To create a new dictionary, you will need to create an instance of the Dictionary class. You will need to provide a data loader function, a key name, a function to retrieve the text for an item, and a default missing text.
+
+```typescript
+const dictionary = new Dictionary(loader: DataLoader, keyName: string, getText: string | GetText, missingText: string);
+```
+
+**Reloading data**  
+To reload data in the dictionary, you can use the reload() method. This method will fetch the data using the data loader function and rebuild the dictionary with the new data.
+
+```typescript
+await dictionary.reload();
+```
+
+**Accessing data**  
+You can access the data in the dictionary using the get() method. This method takes a key as a parameter and returns the corresponding object in the dictionary.
+
+```typescript
+const item = dictionary.get(key);
+```
+
+You can also retrieve the text value for an item in the dictionary using the getValue() method. This method takes a key as a parameter and returns the corresponding text value for the item.
+
+```typescript
+const textValue = dictionary.getValue(key);
+```
+**Getting the list of objects**  
+To get a list of all the objects stored in the dictionary, you can use the toList() method.
+
+```typescript
+const list = dictionary.toList();
+```
+
+**Checking if the dictionary is initialized**  
+You can check if the dictionary has been initialized with data using the initialized property.
+
+```typescript
+if (dictionary.initialized) {
+// dictionary has been initialized with data
+}
+```
+
+**Invalidating the dictionary**  
+To invalidate the data in the dictionary and force it to reload the data the next time it is accessed, you can use the invalidate() method.
+
+```typescript
+dictionary.invalidate();
+```
+
+## TreeDictionary
+This is a TypeScript class that extends the Dictionary class and provides additional functionality to represent a hierarchical data structure as a dictionary. It provides methods to build and traverse the hierarchy of data, as well as retrieve the leaf nodes and children of a specific node.
+
+### Usage
+```typescript
+import TreeDictionary from '@ticatec/tree-dictionary';
+
+// Define a DataLoader to asynchronously retrieve the data
+const loadData: DataLoader = async () => {
+const response = await fetch('/data.json');
+const data = await response.json();
+return data;
+};
+
+// Define a function to determine if a node is a leaf node
+const isLeaf = (item: any) => item.children == null || item.children.length === 0;
+
+// Create a new TreeDictionary instance
+const treeDictionary = new TreeDictionary(loadData, 'id', 'name', 'Unknown', isLeaf);
+
+// Reload the data and wait for it to finish loading
+await treeDictionary.reload();
+
+// Get the list of all leaf nodes
+const leafs = treeDictionary.leafs;
+
+// Get the children of a specific node
+const children = treeDictionary.getChildren('node-id');
+```
+
+### API
+####  constructor(loader: DataLoader, keyName: string, getText: string | GetText, missingText: string, isLeaf: IsLeaf)  
+Constructs a new instance of TreeDictionary. Parameters:
+
+**loader:** A function that returns a Promise that resolves to an array of items. This function is responsible for loading the data for the dictionary.  
+**keyName:** The name of the property that contains the unique identifier of each item.  
+**getText:** A string or a function that retrieves the text to display for each item.  
+**missingText:** The text to display when an item is not found.  
+
+#### isLeaf: 
+A function that takes an item as a parameter and returns a boolean indicating whether it is a leaf node.
+
+#### reload(): Promise<void>
+Reloads the data for the dictionary. If the data is already being loaded, this method returns a Promise that resolves when the loading is complete.
+
+#### leafs: Array<any>
+Gets an array of all the leaf nodes in the hierarchy. If the data has not been loaded yet, this method throws an error.
+
+#### getChildren(key: string): Array<any>
+Gets an array of the children of the node with the specified key. If the node is not found, or if it has no children, an empty array is returned. If the data has not been loaded yet, this method throws an error.
+
+#### Inherited methods from Dictionary
+list, toList(), get(key: string), getValue(key: string), initialized, invalidate().
+
+**License**
+This project is licensed under the MIT license.
+
+**Contributing**
+We welcome contributions to this package! If you have an idea for a feature or would like to report a bug, please open an issue. If you'd like to contribute code, please fork the repository and create a pull request.

@@ -1,4 +1,4 @@
-import {utils} from "@ticatec/enchance-utils";
+import {utils} from "@ticatec/enhanced-utils";
 
 export type DataLoader = () => Promise<Array<any>>;
 export type GetText = (item: any) => string;
@@ -37,7 +37,7 @@ export default class Dictionary {
             this.#loading = true;
             try {
                 this.#list = await this.loader() //utils.isAsyncFunction(this.loader) ? : this.loader();
-                if (!(this.#list instanceof Array)) {
+                if (!(utils.isArray(this.#list))) {
                     console.warn('data:', this.#list);
                     throw new Error('It is not an array');
                 }
@@ -112,7 +112,7 @@ export default class Dictionary {
         if (item == null) {
             return this.missingText;
         } else {
-            return typeof this.getText == 'string' ?  item[this.getText] : utils.isFunction(this.getText);
+            return typeof this.getText == 'string' ?  item[this.getText] : this.getText(item);
         }
     }
 
@@ -124,6 +124,9 @@ export default class Dictionary {
         return this.#initialized;
     }
 
+    /**
+     * 使当前的数据字典失效
+     */
     invalidate():void {
         this.#initialized = false;
     }
