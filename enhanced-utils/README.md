@@ -39,6 +39,14 @@ stringUtils.isEmpty('  hello  '); // returns true
 stringUtils.isEmpty('  hello  ', false); // returns false
 ```
 
+**escapeHtml(text: string): string**  
+Escapes HTML special characters in the given string.
+
+```typescript
+const escapedHtml = utils.escapeHtml("<p>Hello, world!</p>");
+console.log(escapedHtml); // logs "&lt;p&gt;Hello, world!&lt;/p&gt;"
+
+```
 ## Utils
 This is a library of utility functions that can be used to enhance the functionality of your TypeScript code.  
 
@@ -63,8 +71,26 @@ if (utils.isAsyncFunction(myAsyncFunction)) {
 
 await utils.sleep(5); // pause the program for 5 seconds
 
-const escapedHtml = utils.escapeHtml("<p>Hello, world!</p>");
-console.log(escapedHtml); // logs "&lt;p&gt;Hello, world!&lt;/p&gt;"
+const sourceObj = {
+    name: 'John Doe',
+    age: 28,
+    address: null,
+    emptyString: '',
+    emptyArray: [],
+    interests: ['sports', 'music']
+};
+
+// Clone an object
+const clonedObj = clone(sourceObj);
+
+// Clean up an object and remove null values, empty strings, and empty arrays
+const purgedObj = objectPurge(sourceObj);
+
+// Merge two objects by copying specific properties from the source object to the destination object
+const destObj = { name: 'Jane Doe', age: 25 };
+const props = ['name', 'interests'];
+objectMerge(destObj, sourceObj, props);
+
 
 ```
 
@@ -75,44 +101,23 @@ Checks whether the given value is an array.
 **isFunction(fun: any): boolean**  
 Checks whether the given value is a function.
 
+**isObject(value: any): boolean**
+Checks where the given value is an object.
+
 **isAsyncFunction(fun: any): boolean**  
 Checks whether the given value is an async function.
 
 **sleep(n: number): Promise<void>**  
 Pauses the program for the specified number of seconds (n).
 
-**escapeHtml(text: string): string**  
-Escapes HTML special characters in the given string.
+**clone(obj: any): any**
+Creates a deep copy of an object.
 
-## Object Extension
-it extends the Object class with the following functions:
+**objectPurge(obj: any, strict?: boolean): any**
+Removes null values, empty strings, and empty arrays from an object.
 
-**clone()**
-This function returns a deep copy of the object.
-
-```typescript
-const obj = { a: 1, b: 2 };
-const copy = obj.clone();
-console.log(copy); // { a: 1, b: 2 }
-```
-
-**purge(strict: boolean)**  
-This function returns a new object with all empty properties removed. If the strict parameter is set to true, properties that only contain whitespace will also be removed.
-```typescript
-const obj = { a: '', b: '  ', c: null, d: [1, 2, 3], e: {} };
-const purged = obj.purge();
-console.log(purged); // { d: [1, 2, 3], e: {} }
-```
-
-**merge(from: any, props: Array<string>)**  
-This function merges the properties of the from object into the current object. The props parameter is an optional array of property names to merge. If it is not specified, all properties will be merged.
-
-```typescript
-const obj = { a: 1, b: 2 };
-const from = { b: 3, c: 4 };
-obj.merge(from);
-console.log(obj); // { a: 1, b: 3, c: 4 }
-```
+**objectMerge(dest: any, src: any, props?: string[]): void**
+Copies specific properties from the source object to the destination object. If props is not provided, all properties of the source object will be copied.
 
 ## Array Extension
 

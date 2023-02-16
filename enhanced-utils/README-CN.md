@@ -37,6 +37,14 @@ stringUtils.isEmpty('  hello  '); // returns true
 stringUtils.isEmpty('  hello  ', false); // returns false
 ```
 
+**escapeHtml(text: string): string**  
+在给定字符串中转义 HTML 特殊字符。
+
+```typescript
+const escapedHtml = utils.escapeHtml("<p>Hello, world!</p>");
+console.log(escapedHtml); // logs "&lt;p&gt;Hello, world!&lt;/p&gt;"
+```
+
 ## Utils
 这是一个实用函数库，可用于增强 TypeScript 代码的功能。
 
@@ -61,8 +69,25 @@ if (utils.isAsyncFunction(myAsyncFunction)) {
 
 await utils.sleep(5); // pause the program for 5 seconds
 
-const escapedHtml = utils.escapeHtml("<p>Hello, world!</p>");
-console.log(escapedHtml); // logs "&lt;p&gt;Hello, world!&lt;/p&gt;"
+const sourceObj = {
+    name: 'John Doe',
+    age: 28,
+    address: null,
+    emptyString: '',
+    emptyArray: [],
+    interests: ['sports', 'music']
+};
+
+// Clone an object
+const clonedObj = clone(sourceObj);
+
+// Clean up an object and remove null values, empty strings, and empty arrays
+const purgedObj = objectPurge(sourceObj);
+
+// Merge two objects by copying specific properties from the source object to the destination object
+const destObj = { name: 'Jane Doe', age: 25 };
+const props = ['name', 'interests'];
+objectMerge(destObj, sourceObj, props);
 
 ```
 
@@ -76,42 +101,20 @@ console.log(escapedHtml); // logs "&lt;p&gt;Hello, world!&lt;/p&gt;"
 **isAsyncFunction(fun: any): boolean**  
 检查给定值是否为异步函数。
 
+**isObject(value: any): boolean**
+检查给定值是否为一个对象。
+
 **sleep(n: number): Promise<void>**  
 暂停程序指定的秒数（n）。
 
-**escapeHtml(text: string): string**  
-在给定字符串中转义 HTML 特殊字符。
-
-## 类扩展
-它扩展了 Object 类，提供以下函数：
-
-**clone()**
+**clone(obj: any): any**
 此函数返回对象的深拷贝。
 
-```typescript
-const obj = { a: 1, b: 2 };
-const copy = obj.clone();
-console.log(copy); // { a: 1, b: 2 }
-```
-
-**purge(strict: boolean)**  
+**objectPurge(obj: any, strict?: boolean): any**
 此函数返回一个新对象，其中删除了所有空属性。如果 strict 参数设置为 true，则仅包含空格的属性也将被删除。
 
-```typescript
-const obj = { a: '', b: '  ', c: null, d: [1, 2, 3], e: {} };
-const purged = obj.purge();
-console.log(purged); // { d: [1, 2, 3], e: {} }
-```
-
-**merge(from: any, props: Array<string>)**  
-This function merges the properties of the from object into the current object. The props parameter is an optional array of property names to merge. If it is not specified, all properties will be merged.
-
-```typescript
-const obj = { a: 1, b: 2 };
-const from = { b: 3, c: 4 };
-obj.merge(from);
-console.log(obj); // { a: 1, b: 3, c: 4 }
-```
+**objectMerge(dest: any, src: any, props?: string[]): void**
+Copies specific properties from the source object to the destination object. If props is not provided, all properties of the source object will be copied.
 
 ## 数组扩展
 
