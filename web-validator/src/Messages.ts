@@ -1,5 +1,5 @@
 let messages:any = {
-    REQUIRED: '请输入%1$s的值',
+    REQUIRED: '请输入%1$s',
     INVALID_STRING: '%1$s不是一个有效的字符串',
     INVALID_DATE: '%1$s不是一个有效的日期值',
     INVALID_NUMBER: '%1$s不是一个有效的数字',

@@ -1,8 +1,8 @@
 import BaseDataManager, {DataConvert} from "./BaseDataManager";
 import type {CheckEqual} from "./BaseDataManager";
-import type AbstractPaginationDataService from "../DataService/AbstractPaginationDataService";
+import type CommonPaginationDataService from "../DataService/CommonPaginationDataService";
 
-export default abstract class CommonPaginationDataManager<T extends AbstractPaginationDataService> extends BaseDataManager<T> {
+export default abstract class CommonPaginationDataManager<T extends CommonPaginationDataService> extends BaseDataManager<T> {
 
     private static rowsCount: number = 25;
 
@@ -12,7 +12,8 @@ export default abstract class CommonPaginationDataManager<T extends AbstractPagi
 
     protected constructor(service:T, checkEqual: CheckEqual, convert?: DataConvert) {
         super(service, checkEqual, convert);
-        this.#criteria = this.buildCriteria();
+        this.list = [];
+        this.#criteria = service.buildCriteria();
     }
 
     static setRowsPerPage(value: number):void {
@@ -36,7 +37,7 @@ export default abstract class CommonPaginationDataManager<T extends AbstractPagi
         }
         criteria.page = pageNo;
         criteria.rows = CommonPaginationDataManager.rowsCount;
-        let result = await this.service.search(criteria.purge());
+        let result = await this.service.search(criteria);
         this.processDataResult(result);
         this.#pageCount = Math.floor((result.count -1) / criteria.rows) + 1;
         this.#pageNo = pageNo;
@@ -57,23 +58,22 @@ export default abstract class CommonPaginationDataManager<T extends AbstractPagi
      * 初始化数据管理器
      */
     async initialize(): Promise<void> {
-        const criteria = this.buildCriteria();
-        this.list = [];
-        await this.searchData(criteria);
+        await this.refresh();
     }
 
     /**
      * 重置条件查询
      */
     async resetSearch(): Promise<void> {
-        await this.initialize();
+        this.list = [];
+        await this.searchData(this.service.buildCriteria());
     }
 
     /**
      * 按照条件重新查询
      * @param criteria
      */
-    async search(criteria:any): Promise<void> {
+    async search(criteria): Promise<void> {
         await this.searchData(criteria);
     }
 
@@ -84,8 +84,6 @@ export default abstract class CommonPaginationDataManager<T extends AbstractPagi
         this.list = [];
         await this.searchData(this.#criteria);
     }
-
-    protected abstract buildCriteria(): any;
 
     /**
      * 当前的查询条件

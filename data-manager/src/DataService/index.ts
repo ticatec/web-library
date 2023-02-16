@@ -1,5 +1,5 @@
-import AbstractDataService from "./AbstractDataService";
-import AbstractPaginationDataService from "./AbstractPaginationDataService";
+import CommonDataService from "./CommonDataService";
+import CommonPaginationDataService from "./CommonPaginationDataService";
 import BaseDataService from "./BaseDataService";
 
-export {BaseDataService, AbstractDataService, AbstractPaginationDataService};
+export {BaseDataService, CommonDataService, CommonPaginationDataService};

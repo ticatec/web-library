@@ -1,8 +1,8 @@
 import BaseDataManager, {CheckEqual, DataConvert} from "./BaseDataManager";
-import AbstractPaginationDataService from "../DataService/AbstractPaginationDataService";
+import CommonPaginationDataService from "../DataService/CommonPaginationDataService";
 import CommonPaginationDataManager from "./CommonPaginationDataManager";
 
-export default abstract class StackDataManager<T extends AbstractPaginationDataService> extends CommonPaginationDataManager<T> {
+export default abstract class StackDataManager<T extends CommonPaginationDataService> extends CommonPaginationDataManager<T> {
 
 
 

@@ -41,4 +41,6 @@ export interface FloatValidatorRule extends ValidationRule {
 export interface StringValidator extends ValidationRule {
     minLength?: number;
     maxLength?: number;
+    regex?: string | RegExp;
+    format?: string;
 }

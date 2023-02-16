@@ -34,7 +34,7 @@ const createValidationRule = (rule):Validator => {
         case 'object':
             return new ObjectValidator(rule.field, rule.name, rule.key, rule.required, createValidators(rule.rules), rule.custom);
         default:
-            return new StringValidator(rule.field, rule.name, rule.key,rule.required, rule.minLen, rule.regex, rule.custom,);
+            return new StringValidator(rule.field, rule.name, rule.key,rule.required, rule.minLen, rule.regex, rule.format, rule.custom,);
     }
 }
 

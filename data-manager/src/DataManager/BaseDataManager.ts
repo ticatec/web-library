@@ -1,10 +1,10 @@
 
-import type AbstractDataService from "../DataService/AbstractDataService";
+import type CommonDataService from "../DataService/CommonDataService";
 
 export type CheckEqual = (e1: any, e2: any) => boolean;
 export type DataConvert = (item: any, isNew: boolean) => any
 
-export default abstract class BaseDataManager<T extends AbstractDataService> {
+export default abstract class BaseDataManager<T extends CommonDataService> {
 
     private _list: Array<any>;
     private readonly _service: T;

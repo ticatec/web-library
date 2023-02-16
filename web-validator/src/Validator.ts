@@ -103,10 +103,12 @@ export class StringValidator extends Validator {
 
     protected readonly minLen: number;
     protected readonly regex: string | RegExp;
+    protected readonly format;
 
     constructor(field: string, name: string, key: string, required:boolean = false, minLen: number,
-                regex: string | RegExp, custom: CustomCheck) {
+                regex: string | RegExp, format: string, custom: CustomCheck) {
         super(field, name, key, required, custom);
+        this.format = format;
         this.regex = regex;
         this.minLen = minLen;
     }
@@ -134,7 +136,7 @@ export class StringValidator extends Validator {
             return false;
         }
         if (this.regex && value.match(this.regex)==null) {
-            this.setError(result, sprintf(getMessage('REGEXP_NOT_MATCH'), this.name));
+            this.setError(result, this.format || sprintf(getMessage('REGEXP_NOT_MATCH'), this.name));
             return false;
         }
         return true;

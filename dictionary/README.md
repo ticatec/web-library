@@ -1,5 +1,7 @@
 # Dictionary Manager Library
 
+[中文说明](https://github.com/ticatec/web-library/blob/main/dictionary/README_CN.md)
+
 ## Dictionary Manager
 This package contains a Dictionary Manager, which is responsible for managing a collection of data dictionaries. The manager allows for the registration, initialization, and refresh of data dictionaries.
 
