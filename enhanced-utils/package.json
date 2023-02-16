@@ -1,9 +1,10 @@
 {
   "name": "@ticatec/enhanced-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",
+  "keywords": ["enhanced", "arrays", "utils", "string"],
   "description": "This is a utility library to enhance the Object and Array, it also provide some basic functions such as: isString, isArray, isEmpty etc.",
   "scripts": {
     "test": "mocha --require ts-node/register test/*-test.ts",

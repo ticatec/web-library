@@ -18,7 +18,7 @@ This is a simple JavaScript library that provides utility functions to work with
 
 ### Usage
 ```typescript
-import {stringUtils} from '@ticatec/enchance-utils/stringUtils';
+import {stringUtils} from '@ticatec/enchance-utils';
 ```
 
 **isString(s: any)**  
