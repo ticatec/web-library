@@ -36,7 +36,9 @@ if (!Object.prototype.purge) {
         let obj = {};
         Object.keys(this).forEach(key =>{
             let v = this[key];
-            if (!(v == null || (utils.isArray(v) && v.length == 0) || (stringUtils.isString(v) && stringUtils.isEmpty(v, strict)))) {
+            let isNull = v == null || (utils.isArray(v) && v.length == 0)
+                || (stringUtils.isEmpty(v, strict));
+            if (!isNull) {
                 obj[key] = v;
             }
         });

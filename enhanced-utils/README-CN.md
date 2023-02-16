@@ -1,95 +1,149 @@
-# 增强工具类
+# Enhanced Utils
 
-在这个软件包中，包括了一些增强工具类，对Object和Array增加了新的函数，用于扩展强化功能。
-
-## Object
-
-对Object类增加了以下三个方法：
-
-### 深度复制 clone
-深度复制将新建一对象，所有的值都和当前的对象完全一样，这个复制是深度复制，是将对象序列化后再反序列化成为一个全新的对象。两个对象直接没有任何连接。 
-使用方法：
-```javascript
-  let obj = {name: 'James', age: 16, hobby: ['swim', 'travel', 'golf'], group: {code: '00', name: 'group a'}};
-  let obj1 = obj.clone();
-  console.log(obj==obj1, obj.group==obj1.group, obj.hobby==obj1.hobby);
-```
-### 清理空属性 purge
-将对象实例中的null或者空字符串（包括仅仅包括空格的字符串）对应的属性都删除。  
-使用方法：
-```javascript
-  let criteria = {from: '2022-01-01', to: '2022-01-31', status: ' ', name: '', dept: null};
-  let criteria1 = criteria.purge();
-  console.log(criteria1);
-  /*输出的内容会仅仅包括 from 和 to两个属性*/
+## 安装
+你可以通过 npm 安装库:
+```shell
+npm install @ticatec/enhanced-utils
 ```
 
-### 合并目标对象 merge
-把目标对象中的指定属性合并到当前的对象里面，如果有重名属性，会更新当前对象中的属性。
-```javascript
-  let obj = {name: 'James', age: 16, hobby: ['swim', 'travel', 'golf'], group: {code: '00', name: 'group a'}};
-  let obj1 = {age: 17, gender: 'M', location: 'Norway'}
-  obj.merge(obj1, ['gender', "location"]); /*合并指定属性到当前对象*/
-  obj.merge(obj1); /*合并所有属性到当前对象*/
+或者
+```shell
+yarn add @ticatec/enhanced-utils
 ```
 
-## Array
-对数组对象扩展了三个函数，删除对象，替换对象，合并
+## StringUtils
+这是一个简单的 JavaScript 库，提供了用于处理字符串的实用函数
 
-### 删除对象 remove
-从数组中删除指定的对象，如果删除成功返回true，没有找到对应的对象，返回false  
-使用方法：
-```javascript
-  let obj1 = {id: 12, code: 'c1'};
-  let obj2 = {id: 13, code: 'c2'};
-  let obj3 = {id: 14, code: 'c3'};
-  let obj4 = {id: 15, code: 'c4'};
-  let arr = [obj1, obj2, obj3, obj4];
-  arr.remove(obj2);
+### 使用方法
+```typescript
+import {stringUtils} from '@ticatec/enchance-utils/stringUtils';
 ```
 
-### 替换对象 replace
-从数组中替换第一个匹配的对象，如果替换成功返回true，没有找到对应的对象，返回false  
-使用方法：
-```javascript
-  let obj1 = {id: 12, code: 'c1'};
-  let obj2 = {id: 13, code: 'c2'};
-  let obj3 = {id: 14, code: 'c3'};
-  let obj4 = {id: 15, code: 'c4'};
-  let arr = [obj1, obj2, obj3, obj4];
-  arr.replace({id: 13, code: 'cc5'}, (e1, e2)=>e1.id=e2.id);
+**isString(s: any)**  
+此函数以任何值作为输入，并在输入为字符串时返回 true，否则返回 false。
+
+示例:
+```typescript
+stringUtils.isString('hello world'); // returns true
+stringUtils.isString(123); // returns false
 ```
 
-### 合并数组 union
-把目标数组合并到当前数组中，如果有重复的元素，则替换  
-使用方法：
-```javascript
-  let obj1 = {id: 12, code: 'c1'};
-  let obj2 = {id: 13, code: 'c2'};
-  let obj3 = {id: 14, code: 'c3'};
-  let obj4 = {id: 15, code: 'c4'};
-  let obj5 = {id: 14, code: 'c3'};
-  let obj6 = {id: 15, code: 'c4'};
-  let arr = [obj1, obj2, obj3, obj4];
-  let arr1 = [{id: 13, code: 'cc5'}, obj5, obj6];
-  arr.union(arr1, (e1, e2)=>e1.id=e2.id);
+**isEmpty(s: string, strict: boolean = true)**  
+此函数以字符串和可选的布尔参数作为输入。如果字符串为空或仅包含空格字符，则返回 true。如果 strict 参数设置为 true（默认值），则在确定字符串是否为空时，前导和尾随空格字符也会被考虑。
+```typescript
+stringUtils.isEmpty('  '); // returns true
+stringUtils.isEmpty('  ', false); // returns false
+stringUtils.isEmpty('  hello  '); // returns true
+stringUtils.isEmpty('  hello  ', false); // returns false
 ```
 
-## 另外还包括两组工具函数包
+## Utils
+这是一个实用函数库，可用于增强 TypeScript 代码的功能。
 
-### stringUtils
-字符串工具包，包括判断是否是字符串 **isString** 的函数和是否是空字符串的函数 **isEmpty**
-
-```javascript
-  let s = 56;
-  console.log(stringUtils.isString(s));
-  let s1 = ' ';
-  console.log(stringUtils.isEmpty(s), stringUtils.isEmpty(s, false));
+### 使用方法
+从包中导入所需的实用程序函数，如下所示：
+```typescript
+import { utils } from '@ticatec/enhanced-utils';
 ```
 
-### utils
-包括一组函数，
-1. **isArray**: 判断是否是数组
-2. **isFunction**: 判断是否是函数
-3. **isAsyncFunction**: 判断是否是异步函数
-4. **sleep**: 异步函数，暂停n秒，需要使用**await**调用
+```typescript
+if (utils.isArray(myArray)) {
+    // do something with the array
+}
+
+if (utils.isFunction(myFunction)) {
+    // call the function
+}
+
+if (utils.isAsyncFunction(myAsyncFunction)) {
+    // call the async function
+}
+
+await utils.sleep(5); // pause the program for 5 seconds
+
+const escapedHtml = utils.escapeHtml("<p>Hello, world!</p>");
+console.log(escapedHtml); // logs "&lt;p&gt;Hello, world!&lt;/p&gt;"
+
+```
+
+### API
+**isArray(data: any): boolean**  
+检查给定值是否为数组。
+
+**isFunction(fun: any): boolean**  
+检查给定值是否为函数。
+
+**isAsyncFunction(fun: any): boolean**  
+检查给定值是否为异步函数。
+
+**sleep(n: number): Promise<void>**  
+暂停程序指定的秒数（n）。
+
+**escapeHtml(text: string): string**  
+在给定字符串中转义 HTML 特殊字符。
+
+## 类扩展
+它扩展了 Object 类，提供以下函数：
+
+**clone()**
+此函数返回对象的深拷贝。
+
+```typescript
+const obj = { a: 1, b: 2 };
+const copy = obj.clone();
+console.log(copy); // { a: 1, b: 2 }
+```
+
+**purge(strict: boolean)**  
+此函数返回一个新对象，其中删除了所有空属性。如果 strict 参数设置为 true，则仅包含空格的属性也将被删除。
+
+```typescript
+const obj = { a: '', b: '  ', c: null, d: [1, 2, 3], e: {} };
+const purged = obj.purge();
+console.log(purged); // { d: [1, 2, 3], e: {} }
+```
+
+**merge(from: any, props: Array<string>)**  
+This function merges the properties of the from object into the current object. The props parameter is an optional array of property names to merge. If it is not specified, all properties will be merged.
+
+```typescript
+const obj = { a: 1, b: 2 };
+const from = { b: 3, c: 4 };
+obj.merge(from);
+console.log(obj); // { a: 1, b: 3, c: 4 }
+```
+
+## 数组扩展
+
+这是一个 TypeScript 代码扩展，为 JavaScript 数组提供额外的功能。
+
+### 特性
+这个扩展为 JavaScript 数组提供以下功能：
+
+**remove(elem: T): boolean**  
+从数组中删除匹配的元素，并在成功删除一个元素时返回 true，如果未找到该元素则返回 false。
+
+**replace(elem: T, match: ObjectEqual): boolean**  
+用新元素替换数组中的匹配元素。如果找到并替换了该元素，则返回 true，否则返回 false。
+
+**union(list: Array<T>, match: ObjectEqual): void**  
+将目标数组与另一个数组合并，同时基于匹配函数删除重复项。
+
+### Usage
+这个扩展可以通过复制和粘贴代码或导入模块来使用。一旦安装，就可以从任何数组实例中访问新函数。
+
+```typescript
+import '@ticatec/enchance-utils';
+
+let arr = [1,2,3];
+arr.remove(1); // returns true and the array now is [2,3]
+
+arr.replace(2, (e1, e2) => e1 === e2); // returns true and the array now is [1, 2, 3]
+
+let arr2 = [4,5,6];
+arr.union(arr2, (e1, e2) => e1 === e2); // returns void and the array now is [1, 2, 3, 4, 5, 6]
+
+```
+
+许可证  
+The Enhanced-Utils is [MIT licensed](https://github.com/ticatec/web-library/blob/main/LICENSE).

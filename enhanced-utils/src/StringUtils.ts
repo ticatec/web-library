@@ -9,6 +9,6 @@ const isString = (s: any) => typeof s == 'string';
  * @param s
  * @param strict 是否严格要求，两端的空格会被忽略
  */
-const isEmpty = (s: string, strict: boolean = true) => s == null || s == '' || (strict && s.trim().length == 0);
+const isEmpty = (s: string, strict: boolean = true) => s == null || s == '' || (isString(s) && strict && s.trim().length == 0);
 
 export default {isString, isEmpty}
