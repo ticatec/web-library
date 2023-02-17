@@ -1,3 +1,3 @@
-import PaginationList from "./PaginationList";
+import type PaginationList from "./PaginationList";
 
 export default PaginationList;

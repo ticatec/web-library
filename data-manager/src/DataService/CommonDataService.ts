@@ -1,6 +1,6 @@
 import BaseDataService from "./BaseDataService";
 
-export default class CommonDataService extends BaseDataService {
+export default abstract class CommonDataService extends BaseDataService {
 
     protected readonly url: string;
 
@@ -20,6 +20,23 @@ export default class CommonDataService extends BaseDataService {
         } else {
             return this.getService().put(this.url, data);
         }
+    }
+
+    /**
+     * 删除指定的一条数据
+     * @param item
+     */
+    remove(item: any): Promise<void> {
+        return this.getService().del(this.getDeleteUrl(item));
+    }
+
+    /**
+     *
+     * @param item
+     * @protected
+     */
+    protected getDeleteUrl(item: any): string {
+        return this.url;
     }
 
 }

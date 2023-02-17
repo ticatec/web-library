@@ -31,6 +31,11 @@ export default abstract class BaseDataManager<T extends CommonDataService> {
         return this.#checkEqual;
     }
 
+    /**
+     * 保存一条记录到数据库，并加入到本地集合
+     * @param data
+     * @param isNew
+     */
     async save(data: any, isNew: boolean): Promise<void> {
         let item = await this.service.save(data, isNew);
         if (this.#convert != null) {
@@ -41,6 +46,15 @@ export default abstract class BaseDataManager<T extends CommonDataService> {
         } else {
             this._list.replace(item, this.#checkEqual);
         }
+    }
+
+    /**
+     * 删除一条记录，并从本地集合中删除
+     * @param item
+     */
+    async remove(item:any):Promise<void> {
+        await this.service.remove(item);
+        this._list.remove(item);
     }
 
     /**

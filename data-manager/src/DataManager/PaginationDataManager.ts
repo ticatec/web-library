@@ -1,4 +1,4 @@
-import BaseDataManager, {DataConvert} from "./BaseDataManager";
+import {DataConvert} from "./BaseDataManager";
 import type {CheckEqual} from "./BaseDataManager";
 import type CommonPaginationDataService from "../DataService/CommonPaginationDataService";
 import CommonPaginationDataManager from "./CommonPaginationDataManager";

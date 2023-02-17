@@ -1,5 +1,6 @@
 import CommonDataService from "./CommonDataService";
 import PaginationList from "../PaginationList";
+import {utils} from "@ticatec/enhanced-utils";
 
 export default abstract class CommonPaginationDataService extends CommonDataService {
 
@@ -8,9 +9,7 @@ export default abstract class CommonPaginationDataService extends CommonDataServ
      * @param criteria
      */
     search(criteria: any): Promise<PaginationList> {
-        console.log('发送的查询条件：', criteria, criteria.purge(), (criteria || {}).purge());
-        criteria = (criteria || {}).purge();
-        return this.getService().get(this.url, criteria) ;
+        return this.getService().get(this.url, utils.objectPurge(criteria)) ;
     }
 
     abstract buildCriteria(): any;
