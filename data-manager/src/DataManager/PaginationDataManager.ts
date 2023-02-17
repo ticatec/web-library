@@ -3,7 +3,7 @@ import type {CheckEqual} from "./BaseDataManager";
 import type CommonPaginationDataService from "../DataService/CommonPaginationDataService";
 import CommonPaginationDataManager from "./CommonPaginationDataManager";
 
-export default abstract class PaginationDataManager<T extends CommonPaginationDataService> extends CommonPaginationDataManager<T> {
+export default class PaginationDataManager<T extends CommonPaginationDataService> extends CommonPaginationDataManager<T> {
 
 
 

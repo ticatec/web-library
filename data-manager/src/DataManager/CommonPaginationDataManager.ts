@@ -1,6 +1,7 @@
 import BaseDataManager, {DataConvert} from "./BaseDataManager";
 import type {CheckEqual} from "./BaseDataManager";
 import type CommonPaginationDataService from "../DataService/CommonPaginationDataService";
+import {utils} from "@ticatec/enhanced-utils";
 
 export default abstract class CommonPaginationDataManager<T extends CommonPaginationDataService> extends BaseDataManager<T> {
 
@@ -41,7 +42,7 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
         this.processDataResult(result);
         this.#pageCount = Math.floor((result.count -1) / criteria.rows) + 1;
         this.#pageNo = pageNo;
-        this.#criteria = criteria.clone();
+        this.#criteria = utils.clone(criteria);
     }
 
     protected abstract processDataResult(result: any): void;
