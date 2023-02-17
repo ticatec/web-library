@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"esModuleInterop": true,
-		"target": "es6",
+		"target": "es2017",
 		"resolveJsonModule": true,
 		"moduleResolution": "node",
 		"declaration": true,
@@ -9,5 +9,5 @@
 		"rootDir": "src",
 		"outDir": "dist"
 	},
-	"lib": ["es2015"]
+	"lib": ["es2017"]
 }

@@ -23,7 +23,7 @@ class DataValidator {
     }
 }
 
-const createValidationRule = (rule):Validator => {
+const createValidationRule = (rule: any):Validator => {
     switch (rule.type) {
         case 'date':
             return new DateValidator(rule.field, rule.name, rule.key, rule.required, rule.min, rule.max, rule.custom);
@@ -34,11 +34,11 @@ const createValidationRule = (rule):Validator => {
         case 'object':
             return new ObjectValidator(rule.field, rule.name, rule.key, rule.required, createValidators(rule.rules), rule.custom);
         default:
-            return new StringValidator(rule.field, rule.name, rule.key,rule.required, rule.minLen, rule.regex, rule.format, rule.custom,);
+            return new StringValidator(rule.field, rule.name, rule.key,rule.required, rule.minLen, rule.regex, rule.format, rule.custom);
     }
 }
 
-const createValidators = (rules: Array<Validator>): Array<Validator> => {
+const createValidators = (rules: Array<any>): Array<Validator> => {
     let arr: Array<Validator> = [];
     rules.forEach(rule => {
         arr.push(createValidationRule(rule));
@@ -46,6 +46,6 @@ const createValidators = (rules: Array<Validator>): Array<Validator> => {
     return arr;
 }
 
-export const createDataValidator = (rules: Array<Validator>):DataValidator =>  {
+export const createDataValidator = (rules: Array<any>):DataValidator =>  {
     return new DataValidator(createValidators(rules));
 }
