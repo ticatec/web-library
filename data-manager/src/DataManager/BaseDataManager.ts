@@ -67,6 +67,15 @@ export default abstract class BaseDataManager<T extends CommonDataService> {
     }
 
     /**
+     * 在列表增加一个条目到最前面
+     * @param item
+     * @protected
+     */
+    protected append(item: any):void {
+        this._list = [item, ...this._list];
+    }
+
+    /**
      * 设置数据集
      * @param value
      * @protected

@@ -99,9 +99,9 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
     }
 
     /**
-     * 属性：总页数
+     * 总页数
      */
-    getPageCount(): number {
+    protected getPageCount(): number {
         return this.#pageCount;
     }
 
