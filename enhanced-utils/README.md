@@ -151,5 +151,5 @@ arr.union(arr2, (e1, e2) => e1 === e2); // returns void and the array now is [1,
 
 ```
 
-License  
+## License  
 The Enhanced-Utils is [MIT licensed](https://github.com/ticatec/web-library/blob/main/LICENSE).

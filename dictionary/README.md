@@ -147,10 +147,8 @@ Constructs a new instance of TreeDictionary. Parameters:
 **loader:** A function that returns a Promise that resolves to an array of items. This function is responsible for loading the data for the dictionary.  
 **keyName:** The name of the property that contains the unique identifier of each item.  
 **getText:** A string or a function that retrieves the text to display for each item.  
-**missingText:** The text to display when an item is not found.  
-
-#### isLeaf: 
-A function that takes an item as a parameter and returns a boolean indicating whether it is a leaf node.
+**missingText:** The text to display when an item is not found.
+**isLeaf:** A function that takes an item as a parameter and returns a boolean indicating whether it is a leaf node.
 
 #### reload(): Promise<void>
 Reloads the data for the dictionary. If the data is already being loaded, this method returns a Promise that resolves when the loading is complete.
