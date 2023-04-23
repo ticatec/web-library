@@ -10,6 +10,7 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
     #criteria: any;
     #pageCount: number = 1;
     #pageNo: number = 1;
+    #count: number = 0;
 
     protected constructor(service:T, checkEqual: CheckEqual, convert?: DataConvert) {
         super(service, checkEqual, convert);
@@ -21,6 +22,16 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
         CommonPaginationDataManager.rowsCount = value;
     }
 
+    /**
+     * 删除一条记录，并从本地集合中删除
+     * @param item
+     */
+    async remove(item:any):Promise<void> {
+        await super.remove(item);
+        if (this.list.length < CommonPaginationDataManager.rowsCount / 2) {
+            await this.refresh();
+        }
+    }
 
     /**
      * 根据条件查询数据
@@ -28,7 +39,7 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
      * @param pageNo
      */
     protected async searchData(criteria: any, pageNo: number = 1): Promise<void> {
-        if (pageNo < 0) {
+        if (pageNo <= 0) {
             pageNo = 1;
         } else if (pageNo > this.#pageCount) {
             pageNo = this.#pageCount;
@@ -42,6 +53,7 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
         this.processDataResult(result);
         this.#pageCount = Math.floor((result.count -1) / criteria.rows) + 1;
         this.#pageNo = pageNo;
+        this.#count = result.count;
         this.#criteria = utils.clone(criteria);
     }
 
@@ -103,6 +115,14 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
      */
     protected getPageCount(): number {
         return this.#pageCount;
+    }
+
+    /**
+     * 返回纪录总数
+     * @protected
+     */
+    protected getCount(): number {
+        return this.#count;
     }
 
 }

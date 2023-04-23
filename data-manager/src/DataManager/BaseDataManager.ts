@@ -67,6 +67,15 @@ export default abstract class BaseDataManager<T extends CommonDataService> {
     }
 
     /**
+     * 替换主键相同的条目
+     * @param item
+     * @protected
+     */
+    protected replace(item): void {
+        this._list.replace(item, this.#checkEqual);
+    }
+
+    /**
      * 在列表增加一个条目到最前面
      * @param item
      * @protected

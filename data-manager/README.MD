@@ -1,3 +1,7 @@
+# Data Service and Data Manager
+
+[中文文档](https://github.com/ticatec/web-library/blob/main/data-manager/README-CN.md)
+
 # DataService
 
 ## BaseDataService

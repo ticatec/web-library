@@ -169,4 +169,41 @@ export default class RestService {
         return await this.fetchData(Utils.combineUrl(url, params), options, dataProcessor, true);
     }
 
+    async download(url, params, filename):Promise<any> {
+        RestService.debug && console.debug(TAG, "发送GET请求到" + url, "参数：", (params || '无'));
+        let options = {method: 'GET'};
+        let request = this.buildRequest(Utils.combineUrl(url, params), options, false);
+        let response;
+        let ex;
+        try {
+            response = await fetch(request);
+            if (response.status < 300) {
+                let data = await response.blob();
+                let a = document.createElement("a");
+                a.href = window.URL.createObjectURL(data);
+                a.download = filename;
+                a.click();
+            } else {
+                let status = response.status;
+                let errObj;
+                try {
+                    errObj = await response.json();
+                    RestService.debug && console.debug(TAG, errObj);
+                } catch (e) {
+                    errObj = {code: 100}
+                }
+                ex = new ApiError(status, errObj);
+            }
+        } catch (e1) {
+            console.error(e1);
+            ex = new ApiError(-1, {code: 100});
+        }
+        if (ex != null) {
+            if (this.errorHandler != null) {
+                this.errorHandler(ex);
+            }
+            throw ex;
+        }
+    };
+
 }
