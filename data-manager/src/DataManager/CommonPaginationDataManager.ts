@@ -121,8 +121,10 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
      * 返回纪录总数
      * @protected
      */
-    protected getCount(): number {
+    get count(): number {
         return this.#count;
     }
+
+
 
 }
