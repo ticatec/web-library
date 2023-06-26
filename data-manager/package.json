@@ -1,6 +1,6 @@
 {
   "name": "@ticatec/app-data-manager",
-  "version": "0.5.3",
+  "version": "0.5.5",
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",

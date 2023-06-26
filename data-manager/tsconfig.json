@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"esModuleInterop": true,
-		"target": "ES2017",
-		//"module": "commonjs",
+		"target": "ESNext",
+		"module": "ESNext",
 		"resolveJsonModule": true,
 		"moduleResolution": "node",
 		"declaration": true,
@@ -14,5 +14,5 @@
 		"node_modules",
 		"test"
 	],
-	"lib": ["es2015"]
+	"lib": ["es2017"]
 }
