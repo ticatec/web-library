@@ -11,7 +11,6 @@ export default class PaginationDataManager<T extends CommonPaginationDataService
         super(service, checkEqual, convert);
     }
 
-
     protected processDataResult(result: any): void {
         this.list = result.list;
     }

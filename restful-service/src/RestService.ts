@@ -60,6 +60,7 @@ export default class RestService {
      * @protected
      */
     protected async fetchData(url: string, options: any, dataProcessor: DataProcessor, isFormData:any=null): Promise<any> {
+        options.credentials = "include";
         const request = this.buildRequest(url, options, isFormData);
         let ex;
         try {
