@@ -76,7 +76,7 @@ export default class RestService {
         if (typeof data == 'string') {
             data = data.trim();
             if (contentType?.includes(TYPE_JSON)) {
-                data = JSON.parse(data);
+                data = data.length > 0 ? JSON.parse(data) : null;
             }
         }
         return data;
@@ -93,7 +93,7 @@ export default class RestService {
         try {
             console.debug(axiosConf);
             const response:any = await axios(axiosConf);
-            let data: any = this.parseResponseData(response.data, response.headers[CONTENT_TYPE_NAME]);
+            let data: any = this.parseResponseData(response.data, response.headers[CONTENT_TYPE_NAME] ?? TYPE_JSON);
             if (response.status < 300) {
                 if (dataProcessor) {
                     data = dataProcessor(data);
@@ -182,7 +182,7 @@ export default class RestService {
         formData.append('filename', file);
         let ex;
         try {
-            const axiosConf = this.buildAxiosRequest(url, 'DELETE', params, formData, true);
+            const axiosConf = this.buildAxiosRequest(url, 'POST', params, formData, true);
             return await this.fetchData( axiosConf, dataProcessor);
         } catch (reason) {
             ex = this.handleException(reason);
