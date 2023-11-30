@@ -27,27 +27,24 @@ BaseDataManager构造函数需要以下参数：
 **checkEqual** - 一个函数，它接受两个项并返回一个布尔值，指示它们是否相等。该函数用于识别需要更新或删除的本地列表中的项。
 此外，还可以提供可选的**convert**参数以将返回的数据转换为添加到本地列表中。
 
-### API
+### 方法
 
-### 公共方法
-**save(data: any, isNew: boolean): Promise<void>**  
-将数据保存到数据库并更新本地列表。isNew参数指示数据是新数据还是对现有项的更新。
+| 名称 | 修饰符       | 参数                         | 返回值 | 说明         | 备注 |
+|---|-----------|----------------------------|---|------------|----|
+| save   | public    | data:any<br/>isNew:boolean | 无   |            | 异步 |
+| remove | public    | data:any                   | 无   |            | 异步 |
+| removeItem   | protected | item:any                   | 无   | 从列表中删除一条记录 |  |
+| append | protected    | item:any                  | 无   | 新增一条记录到列表头 |  |
+| save   | public    | data:any<br/>isNew:boolean | 无   |            | 异步 |
+| remove | public    | data:any                   | 无   |            | 异步 |
 
-**remove(item: any): Promise<void>**  
-从数据库和本地列表中删除指定的项。
 
-**list: Array<any>**  
-返回当前本地列表的副本。
+### 属性
+| 名称 | 修饰符                            | 类型               | 说明         | 备注 |
+|---|--------------------------------|------------------|------------|----|
+| list | public(get)<br/>protected(set) | Array&lt;any&gt; | 无  |             |
 
-### 受保护的方法
-**removeItem(item: any): void**  
-从本地列表中删除指定的项。  
 
-**append(item: any): void**  
-将指定的项添加到本地列表的开头。 
-
-**set list(value: Array<any>): void**  
-将本地列表设置为指定的值。
 
 ## Common Pagination Data Manager
 这个模块提供了一个CommonPaginationDataManager类，它继承了BaseDataManager类。它用于管理可以在分页表格上显示的数据。
@@ -69,51 +66,45 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
     constructor(service:T, checkEqual: CheckEqual, convert?: DataConvert) {
         super(service, checkEqual, convert);
     }
-
-
 }
 
 ```
 
 ### 方法
-CommonPaginationDataManager 类提供以下方法：
 
-**setRowsPerPage(value: number)**:
-设置每页行数。
+| 名称 | 修饰符       | 参数                       | 返回值 | 说明                          | 备注  |
+|---|-----------|--------------------------|---|-----------------------------|-----|
+| setRowsPerPage   | public    | value:number             | 无   | 设置分页的最多行数                   |     |
+| searchData | public    | criteria: any, pageNo: number = 1 | 无   | 基于指定的搜索条件和页码搜索数据            | 异步  |
+| setPageNo   | public    | value: number            | 无   | 设置新的页吗                      |     |
+| initialize | public    | options:any              | 无   | 初始化分页数据管理器，options是初始化的条件   | 异步  |
+| resetSearch   | public    | 无                        | 无   | 重置查询条件                      | 异步  |
+| search | public    | criteria:any             | 无   | 根据条件查询(废弃，新版更改为setCriteria) | 异步  |
+| setCriteria | public    | criteria:any             | 无   | 设置查询条件                      | 异步  |
+| refresh | public    |                          | 无   | 更加当前条件重新读取                  | 异步  |
+| getPageNo | protected |                          | 无   | 获取当前页吗          |   |
+| getPageCount | protected |                          | 无   | 获取当前总页数  |   |
 
-**searchData(criteria: any, pageNo: number = 1)**:
-基于指定的搜索条件和页码搜索数据。
-
-**setPageNo(value: number)**:
-将当前页码设置为指定的值。
-
-**initialize()**:
-初始化数据管理器。
-
-**resetSearch()**:
-重置搜索条件。
-
-**search(criteria)**:
-基于指定的搜索条件搜索数据。
-
-**refresh()**:
-刷新数据。
-
-**getPageNo():number**:
-获取当前页码。
-
-**getPageCount(): number**:
-获取总页数。
 
 ### 属性
-CommonPaginationDataManager提供以下属性：
+| 名称 | 修饰符                       | 类型  | 说明         | 备注 |
+|---|---------------------------|-----|------------|----|
+| criteria | public | 对象  | 查询条件  |      只读       |
 
-**criteria**: 当前的查询条件
+
+## PaginationDataManager
+PaginationDataManager 是一个实例类，它扩展了 CommonPaginationDataManager 实现从服务器分页读取数据。
+
+### 属性
+| 名称 | 修饰符                       | 类型  | 说明         | 备注 |
+|---|---------------------------|-----|------------|----|
+| pageNo | public | 数字  | 当前页数  |      只读       |
+| pageCount | public | 数字  | 总页数  |      只读       |
 
 
 ## StackDataManager
 
-StackDataManager 是一个抽象类，它扩展了 CommonPaginationDataManager 并添加了从服务器加载更多数据的功能。
+StackDataManager 是一个实例类，它扩展了 CommonPaginationDataManager 并添加了从服务器加载更多数据的功能。
 
 ### 使用方法
 
@@ -138,11 +129,10 @@ class ExampleDataManager extends StackDataManager<CommonPaginationDataService> {
 **checkEqual** - 用于比较两个对象的函数。  
 **convert** - 用于将服务器上的数据转换的函数。  
 
-#### 方法
+### 方法
 
-**loadMore(): Promise<void>**
-读取下一页的数据
-
-**hasMore(): boolean**
-是否还有更多待读取的数据
+| 名称 | 修饰符    | 参数  | 返回值 | 说明        | 备注  |
+|---|--------|-----|---|-----------|-----|
+| loadMore   | public | -   | 无   | 抓取更多的行    |  异步   |
+| hasMore | public | -   | 无   | 是否还有更多的记录 |   |
 

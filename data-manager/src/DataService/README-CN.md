@@ -3,6 +3,16 @@
 ## BaseDataService
 BaseDataService是一个TypeScript类，为客户端应用程序创建数据服务提供了一个简单的模板。它包括一个静态属性serverProxy，可以设置为处理与远程服务器通信的代理对象。该类还包括一个受保护的方法getService()，它返回serverProxy。
 
+### 对象结构
+
+#### 方法
+
+|名称| 修饰符       | 参数  | 返回值           | 说明          | 备注                                             |
+|---|-----------|-----|---------------|-------------|------------------------------------------------|
+|getService| protected |  无  | 无             | 获取当前的代理服务   |                                                |
+|setProxy | static    | value | 无 |  实际的后台服务接口类 | BaseDataService.setProxy(new RestfulService()) |
+
+
 ### 使用方法
 要使用BaseDataService，可以扩展该类并实现自己的方法。例如：
 
@@ -39,17 +49,27 @@ const myDataService = new MyDataService();
 ```
 在这个示例中，我们创建了一个新的Axios实例并使用它创建了serverProxy。然后，我们将BaseDataService的serverProxy属性设置为这个实例。最后，我们创建了一个新的MyDataService实例，并可以使用它来向我们的服务器发出请求。
 
-### API
-**BaseDataService.setProxy(value: any)**: void  
-将serverProxy属性设置为提供的值。
-
-**getService()**: any  
-返回serverProxy属性。这个方法被标记为受保护的，因此只能被扩展BaseDataService的类访问。
-
 
 ## CommonDataService
 
 CommonDataService是一个抽象的TypeScript类，它扩展了BaseDataService，并提供了一组常见的数据服务方法，可用于与远程服务器交互。它包括保存和删除数据的方法。
+
+### 结构
+
+* 父类： BaseDataService
+
+通用的数据查询接口，该接口实现了数据的保存/更新/删除三类操作
+
+#### 方法
+
+| 名称   | 修饰符    | 参数           | 返回值    | 说明                              | 备注                             |
+|------|--------|--------------------|--------|---------------------------------|--------------------------------|
+| -    | 构造方法   | url           | 新实例    | 本接口的根地址                         | new CommonDataService('/user') |
+| save | public | data: any<br/>isNew: boolean| 保存后的数据 | 调用保存接口<br/>data为待保存的数据<br/>isNew是新增还更新 | 异步                             |
+|remove | public | item: any | 无      |              调用删除数据的接口          | 异步                             |
+|getDeleteUrl|protected | item | string | 删除调用的url |                                |
+
+
 
 ### 使用方法
 要使用CommonDataService，您可以扩展该类并为getDeleteUrl()方法提供自己的实现。例如：
@@ -98,21 +118,41 @@ myDataService.remove(user).then(() => {
 ```
 在这个例子中，我们创建了一个MyDataService的新实例，并使用它的save()和remove()方法与服务器交互。save()方法需要两个参数：要保存的数据和一个布尔值，指示数据是新的还是现有的。remove()方法需要一个参数：要删除的项。
 
-### API
-**CommonDataService(url: string)**  
-使用指定的URL创建一个新的CommonDataService实例。
-
-**save(data: any, isNew: boolean): Promise<any>**  
-将指定的数据保存到服务器。如果isNew为true，将创建一个新项。否则，将更新现有项。
-
-**remove(item: any): Promise<void>**  
-从服务器中删除指定的项。
-
-**getDeleteUrl(item: any): string**  
-生成将用于删除指定项的URL。这个方法被标记为受保护的，因此只能被扩展CommonDataService的类访问。
-
 ## CommonPaginationDataService
 CommonPaginationDataService 是一个抽象的 TypeScript 类，它继承了 CommonDataService 并提供了一种在远程服务器上搜索和分页数据的方法。
+
+### 结构
+
+* 父类：CommonDataService
+
+通用的带分页数据接口，该服务继承自BaseDataService，同时增加了分页查询接口，该类为抽象类，不能直接实例化。
+
+| 名称     | 修饰符                | 参数                           | 返回值       | 说明          | 备注  |
+|--------|--------------------|------------------------------|-----------|-------------|-----|
+| search | public             | criteria: any | 符合查询条件的数据 | 返回为一个分页查询结果 | 异步  |
+| buildCriteria | protected abstract | options:any                  | 构造默认的查询条件 |             |   |
+
+**分页查询数据结构**
+```json
+{
+  "count": 55,
+  "pageNo": 1,
+  "pages": 3,
+  "hasMore": true,
+  "list": []
+}
+```
+
+**说明**
+
+|名称|类型|说明|
+|---|---|---|
+|count|数字|符合查询条件的记录数|
+|pageNo|数字|当前的页吗|
+|pages|数字|总页数|
+|hasMore|是否有更多的记录|非必须|
+|list|数组|符合条件分页后的记录|
+
 
 ### 用法
 要使用 CommonPaginationDataService，你可以扩展该类并为 buildCriteria() 方法提供自己的实现。例如：
@@ -139,22 +179,11 @@ const myPaginationDataService = new MyPaginationDataService();
 
 // Search for users
 myPaginationDataService.search(myPaginationDataService.buildCriteria()).then((paginationList) => {
-    console.log('Users found:', paginationList.data);
+    console.log('Users found:', paginationList.list);
 }).catch((error) => {
     console.error('Failed to search for users:', error);
 });
 ```
 在这个例子中，我们创建了一个 MyPaginationDataService 的新实例，并使用其 search() 方法在服务器上搜索和分页数据。search() 方法接受一个参数：要使用的搜索条件。
-
-### API
-**CommonPaginationDataService(url: string)**  
-使用指定的 URL 创建 CommonPaginationDataService 的新实例。
-
-**search(criteria: any): Promise<PaginationList>**  
-根据指定的条件在服务器上搜索和分页数据。返回一个 Promise，解析为包含搜索结果的 PaginationList 对象。
-
-**buildCriteria(): any**  
-生成将发送到服务器的搜索条件。该方法必须由扩展 CommonPaginationDataService 的类实现。
-
 
 

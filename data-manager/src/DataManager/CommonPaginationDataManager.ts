@@ -11,11 +11,22 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
     #pageCount: number = 1;
     #pageNo: number = 1;
     #count: number = 0;
+    #rows: number; //
+    #options: any;
 
-    protected constructor(service:T, checkEqual: CheckEqual, convert?: DataConvert) {
+    /**
+     *
+     * @param service
+     * @param checkEqual
+     * @param options
+     * @protected
+     */
+    protected constructor(service:T, checkEqual: CheckEqual, options?: any, rows?: number, convert?: DataConvert) {
         super(service, checkEqual, convert);
         this.list = [];
-        this.#criteria = service.buildCriteria();
+        this.#rows = rows??CommonPaginationDataManager.rowsCount;
+        this.#options = options;
+        this.#criteria = service.buildCriteria(options);
     }
 
     static setRowsPerPage(value: number):void {
@@ -48,7 +59,7 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
             this.#pageNo = pageNo;
         }
         criteria.page = pageNo;
-        criteria.rows = CommonPaginationDataManager.rowsCount;
+        criteria.rows = this.#rows;
         let result = await this.service.search(criteria);
         this.processDataResult(result);
         this.#pageCount = Math.floor((result.count -1) / criteria.rows) + 1;
@@ -67,6 +78,13 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
         await this.searchData(this.#criteria, value);
     }
 
+    async setRowsPage(value: number): Promise<void> {
+        let times = value / this.#rows;
+        this.#rows = value;
+        this.#pageNo = Math.floor(((this.#pageNo||1) - 1) / times) + 1;
+        await this.searchData(this.#criteria, this.#pageNo);
+    }
+
     /**
      * 初始化数据管理器
      */
@@ -79,7 +97,7 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
      */
     async resetSearch(): Promise<void> {
         this.list = [];
-        await this.searchData(this.service.buildCriteria());
+        await this.searchData(this.service.buildCriteria(this.#options));
     }
 
     /**
@@ -87,6 +105,14 @@ export default abstract class CommonPaginationDataManager<T extends CommonPagina
      * @param criteria
      */
     async search(criteria): Promise<void> {
+        await this.searchData(criteria);
+    }
+
+    /**
+     * 设置查询条件
+     * @param criteria
+     */
+    async setCriteria(criteria): Promise<void> {
         await this.searchData(criteria);
     }
 
