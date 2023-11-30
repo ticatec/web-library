@@ -1,10 +1,12 @@
 import Utils from "./utils";
 import ApiError from "./ApiError";
 
+export type ResponseHandler = (resp: any) => any;
 export type DataProcessor = (data: any) => any;
 export type PreInterceptor = (headers: Headers, method: string | null, url: string | null) => void;
 export type PostInterceptor = (data: any) => Promise<void>;
 export type ErrorHandler = (ex: Error) => boolean;
+
 
 const TAG: string = 'RestService';
 const CONTENT_TYPE_NAME = 'Content-Type';
@@ -17,14 +19,16 @@ export default class RestService {
     private readonly preInvoke: PreInterceptor;
     private readonly postInvoke: PostInterceptor;
     private readonly errorHandler: ErrorHandler;
+    private responseHandler: ResponseHandler;
 
 
-
-    constructor(root: string, errorHandler: ErrorHandler = null, preInvoke: PreInterceptor = null, postInvoke: PostInterceptor = null) {
+    constructor(root: string, errorHandler: ErrorHandler = null, preInvoke: PreInterceptor = null,
+                responseHandler: ResponseHandler = null, postInvoke: PostInterceptor = null) {
         this.root = root;
         this.errorHandler = errorHandler;
         this.preInvoke = preInvoke;
         this.postInvoke = postInvoke;
+        this.responseHandler = responseHandler;
     }
 
     static setDebug(value: boolean): void {
@@ -51,6 +55,35 @@ export default class RestService {
         return new Request(this.root + url, options);
     }
 
+    protected defaultResponseHandler = async (response) => {
+        if (response.status < 300) {
+            let text = ((await response.text()) || '').trim();
+            if (text.length > 0) {
+                let headers = response.headers;
+                let resType = headers.get(CONTENT_TYPE_NAME);
+                let data = resType.includes(TYPE_JSON) ? JSON.parse(text) : text;
+                if (this.postInvoke) {
+                    data = await this.postInvoke(data);
+                }
+                data = dataProcessor != null ? dataProcessor(data) : data;
+                RestService.debug && console.debug(TAG, "返回数据：", data);
+                return data;
+            } else {
+                return null;
+            }
+        } else {
+            let status = response.status;
+            let errObj;
+            try {
+                errObj = await response.json();
+                console.debug(TAG, errObj);
+            } catch (e) {
+                errObj = {code: 100}
+            }
+            throw new ApiError(status, errObj);
+        }
+    }
+
     /**
      * 发起一个http请求
      * @param url
@@ -65,35 +98,14 @@ export default class RestService {
         let ex;
         try {
             const response = await fetch(request);
-            if (response.status < 300) {
-                let text = ((await response.text()) || '').trim();
-                if (text.length > 0) {
-                    let headers = response.headers;
-                    let resType = headers.get(CONTENT_TYPE_NAME);
-                    let data = resType.includes(TYPE_JSON) ? JSON.parse(text) : text;
-                    if (this.postInvoke) {
-                        data = await this.postInvoke(data);
-                    }
-                    data = dataProcessor != null ? dataProcessor(data) : data;
-                    RestService.debug && console.debug(TAG, "返回数据：", data);
-                    return data;
-                } else {
-                    return null;
-                }
-            } else {
-                let status = response.status;
-                let errObj;
-                try {
-                    errObj = await response.json();
-                    console.debug(TAG, errObj);
-                } catch (e) {
-                    errObj = {code: 100}
-                }
-                ex = new ApiError(status, errObj);
-            }
+            return this.responseHandler == null ? await this.defaultResponseHandler(response) : await this.responseHandler(response);
         } catch (e1) {
-            console.error(TAG, "Failure:", e1);
-            ex = new ApiError(-1, {code: 100});
+            if (e1 instanceof ApiError) {
+                ex = e1;
+            } else {
+                console.error(TAG, "Failure:", e1);
+                ex = new ApiError(-1, {code: 100});
+            }
         }
         if (ex != null) {
             if (this.errorHandler != null) {

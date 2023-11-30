@@ -1,86 +1,87 @@
-# RestService - A lightweight REST client for JavaScript
+# RestService
 
-RestService is a lightweight and flexible REST client for JavaScript, built with flexibility and simplicity in mind. With it, you can perform HTTP GET, POST, PUT, and DELETE requests with ease.
+[中文文档](./README-CN.md)
+
+RestService is a JavaScript class designed to simplify and streamline HTTP requests using the Fetch API. It provides methods for common HTTP operations such as GET, POST, PUT, DELETE, as well as file upload and download. The class is configured with options for interceptors, error handling, and response processing.
 
 ## Installation
-To use RestService, you can install it via npm or include it directly in your code.
+To use RestService, you need to include the utils.js file and the ApiError.js file in your project. Then, import RestService in your code:
 
-Via npm:
-```shell
-npm install @ticatec/rest-service
+```js
+import RestService from "./RestService";
 ```
 
 ## Usage
-### Import
-To use RestService, simply import it into your project.
-```javascript
-import RestService from "@ticatec/rest-service";
+
+### Initializing RestService
+```js
+    const restService = new RestService(root, errorHandler, preInvoke, responseHandler, postInvoke);
 ```
+**root**: The base URL for the API.  
+**errorHandler**: (Optional) A function that handles errors.  
+**preInvoke**: (Optional) A function called before each API call for custom header manipulation.  
+**responseHandler**: (Optional) A function to process the response before passing it back to the calling code.
+**postInvoke**: (Optional) A function called after receiving the response for additional processing. 
 
-## Initialization
-Once you have imported the RestService class, you can create a new instance of the client with the following code:
-```typescript
-const rest = new RestService("http://your-api.com");
-```
-
-You can also provide a custom error handler, pre-interceptor, and post-interceptor to the RestService constructor:
-```typescript
-const rest = new RestService(
-    "http://your-api.com",
-    (ex) => console.error(ex), // custom error handler
-    (headers, method, url) => console.log(`Requesting ${method} ${url}`), // pre-interceptor
-    (data) => { console.log(data); return data; } // post-interceptor
-);
-```
-
-## Methods
-The RestService class provides four methods for making HTTP requests: get(), post(), put(), and del(). Each of these methods takes the following parameters:  
-**url**: The URL to which the request will be sent.  
-**data**: The data to be sent with the request. This can be any JavaScript object or primitive value.  
-**params**: Optional parameters to be appended to the URL.  
-**dataProcessor**: An optional function to be applied to the response data before it is returned.  
-
-### get()
-```typescript
-rest.get("/users", { page: 1, limit: 10 }).then((data) => {
-    console.log(data);
-});
-```
-
-### post()
-```typescript
-const user = { name: "John Doe", email: "johndoe@example.com" };
-
-rest.post("/users", user).then((data) => {
-    console.log(data);
-});
-```
-
-### put()
-```typescript
-const user = { name: "John Doe", email: "johndoe@example.com" };
-
-rest.put("/users/1", user).then((data) => {
-    console.log(data);
-});
-```
-
-### del()
-```typescript
-rest.del("/users/1").then((data) => {
-    console.log(data);
-});
-```
-
-**Debugging**
-You can enable debugging mode by calling the setDebug() method of the RestService class:
-```typescript
+### Enabling Debug Mode
+javascript
+```js
 RestService.setDebug(true);
 ```
-When debugging mode is enabled, the client will output helpful log messages to the console, including the HTTP method, URL, parameters, and response data.
+Enable debug mode to log additional information to the console.
 
-## Customization
-The RestService class provides several options for customizing its behavior:
+### Making HTTP Requests
 
-**preInvoke**: A function that is called before each request is made. This can be used to modify the request headers or perform other custom operations. 
-**postInvoke**: A function that is called after each request is made. This can be used to modify the response data or perform other custom operations.
+**GET**
+```javascript
+const data = await restService.get(url, params, dataProcessor);
+```
+
+**POST**
+```javascript
+const data = await restService.post(url, data, params, dataProcessor);
+```
+**PUT**
+
+```javascript
+const data = await restService.put(url, data, params, dataProcessor);
+```
+**DELETE**
+```js
+const data = await restService.del(url, data, params, dataProcessor);
+```
+
+**File Upload**
+```js
+const data = await restService.upload(url, params, file, dataProcessor);
+```
+
+**File Download**
+
+```javascript
+await restService.download(url, params, filename);
+```
+
+## Interceptors
+**preInvoke**: Executed before each HTTP request to manipulate headers.  
+**postInvoke**: Executed after receiving a response for additional processing.
+
+## Error Handling
+Errors are encapsulated using the ApiError class, providing detailed information about the error.
+Examples
+
+```js
+const restService = new RestService("https://api.example.com", handleApiError, addCustomHeaders, processResponse);
+RestService.setDebug(true);
+
+const data = await restService.get("/endpoint");
+const postData = await restService.post("/endpoint", { key: "value" });
+const fileData = await restService.upload("/upload", { key: "value" }, file);
+await restService.download("/download", { key: "value" }, "output.txt");
+```
+
+License
+This code is provided under the MIT License.
+
+Issues and Contributions
+If you encounter any issues or would like to contribute, please open an issue or create a pull request on the GitHub repository.
